@@ -3,6 +3,7 @@ const { createApp, ref } = Vue;
 createApp({
   data() {
     return {
+      players: 6,
       dataArray: {
         name: [],
         verduzco: [],
@@ -28,5 +29,16 @@ createApp({
         estudio: [],
       },
     };
+  },
+  mounted() {
+    for (let item in this.dataArray) {
+      if (item == 'name') {
+        this.dataArray.name[0] = 'Juan';
+      } else this.dataArray[item][0] = false;
+    }
+    console.log(
+      '🚀 ~ file: app.js:35 ~ mounted ~ this.dataArray:',
+      this.dataArray
+    );
   },
 }).mount('#app');
