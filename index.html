@@ -24,63 +24,14 @@
         <thead>
           <tr>
             <th scope="col" class="w-25"><h3>¿Quién?</h3></th>
-            <th scope="col">
+            <th scope="col" v-for="(name, key) in dataArray.name">
               <div class="input-group">
                 <span class="input-group-text" id="basic-addon1">1</span>
                 <input
                   type="text"
                   class="form-control form-control-sm"
                   aria-describedby="basic-addon1"
-                />
-              </div>
-            </th>
-            <th scope="col">
-              <div class="input-group">
-                <span class="input-group-text" id="basic-addon1">2</span>
-                <input
-                  type="text"
-                  class="form-control form-control-sm"
-                  aria-describedby="basic-addon1"
-                />
-              </div>
-            </th>
-            <th scope="col">
-              <div class="input-group">
-                <span class="input-group-text" id="basic-addon1">3</span>
-                <input
-                  type="text"
-                  class="form-control form-control-sm"
-                  aria-describedby="basic-addon1"
-                />
-              </div>
-            </th>
-            <th scope="col">
-              <div class="input-group">
-                <span class="input-group-text" id="basic-addon1">4</span>
-                <input
-                  type="text"
-                  class="form-control form-control-sm"
-                  aria-describedby="basic-addon1"
-                />
-              </div>
-            </th>
-            <th scope="col">
-              <div class="input-group">
-                <span class="input-group-text" id="basic-addon1">5</span>
-                <input
-                  type="text"
-                  class="form-control form-control-sm"
-                  aria-describedby="basic-addon1"
-                />
-              </div>
-            </th>
-            <th scope="col">
-              <div class="input-group">
-                <span class="input-group-text" id="basic-addon1">6</span>
-                <input
-                  type="text"
-                  class="form-control form-control-sm"
-                  aria-describedby="basic-addon1"
+                  v-model="dataArray.name[key]"
                 />
               </div>
             </th>
@@ -89,199 +40,58 @@
         <tbody>
           <tr>
             <th scope="col">Verduzco</th>
-            <td class="text-center">
-              <button class="btn btn-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-            <td class="text-center">
-              <button class="btn btn-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-            <td class="text-center">
-              <button class="btn btn-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-            <td class="text-center">
-              <button class="btn btn-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-            <td class="text-center">
-              <button class="btn btn-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-            <td class="text-center">
-              <button class="btn btn-secondary">
+            <td
+              class="text-center"
+              v-for="(verduzco, key) in dataArray.verduzco"
+            >
+              <button class="btn btn-secondary text-secondary">
                 <i class="bi bi-cc-square"></i>
               </button>
             </td>
           </tr>
           <tr>
             <th scope="col">Mostaza</th>
-            <td class="text-center">
-              <button class="btn btn-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-            <td class="text-center">
-              <button class="btn btn-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-            <td class="text-center">
-              <button class="btn btn-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-            <td class="text-center">
-              <button class="btn btn-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-            <td class="text-center">
-              <button class="btn btn-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-            <td class="text-center">
-              <button class="btn btn-secondary">
+            <td class="text-center" v-for="(mostaza, key) in dataArray.mostaza">
+              <button class="btn btn-secondary text-secondary">
                 <i class="bi bi-cc-square"></i>
               </button>
             </td>
           </tr>
           <tr>
             <th scope="col">Marlene</th>
-            <td class="text-center">
-              <button class="btn btn-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-            <td class="text-center">
-              <button class="btn btn-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-            <td class="text-center">
-              <button class="btn btn-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-            <td class="text-center">
-              <button class="btn btn-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-            <td class="text-center">
-              <button class="btn btn-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-            <td class="text-center">
-              <button class="btn btn-secondary">
+            <td class="text-center" v-for="(marlene, key) in dataArray.marlene">
+              <button class="btn btn-secondary text-secondary">
                 <i class="bi bi-cc-square"></i>
               </button>
             </td>
           </tr>
           <tr>
             <th scope="col">Moradillo</th>
-            <td class="text-center">
+            <td
+              class="text-center"
+              v-for="(moradillo, key) in dataArray.moradillo"
+            >
               <button class="btn btn-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-            <td class="text-center">
-              <button class="btn btn-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-            <td class="text-center">
-              <button class="btn btn-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-            <td class="text-center">
-              <button class="btn btn-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-            <td class="text-center">
-              <button class="btn btn-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-            <td class="text-center">
-              <button class="btn btn-secondary">
-                <i class="bi bi-cc-square"></i>
+                <i class="bi bi-cc-square text-secondary"></i>
               </button>
             </td>
           </tr>
           <tr>
             <th scope="col">Escarlata</th>
-            <td class="text-center">
+            <td
+              class="text-center"
+              v-for="(escarlata, key) in dataArray.escarlata"
+            >
               <button class="btn btn-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-            <td class="text-center">
-              <button class="btn btn-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-            <td class="text-center">
-              <button class="btn btn-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-            <td class="text-center">
-              <button class="btn btn-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-            <td class="text-center">
-              <button class="btn btn-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-            <td class="text-center">
-              <button class="btn btn-secondary">
-                <i class="bi bi-cc-square"></i>
+                <i class="bi bi-cc-square text-secondary"></i>
               </button>
             </td>
           </tr>
           <tr>
             <th scope="col">Blanca</th>
-            <td class="text-center">
+            <td class="text-center" v-for="(blanca, key) in dataArray.blanca">
               <button class="btn btn-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-            <td class="text-center">
-              <button class="btn btn-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-            <td class="text-center">
-              <button class="btn btn-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-            <td class="text-center">
-              <button class="btn btn-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-            <td class="text-center">
-              <button class="btn btn-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-            <td class="text-center">
-              <button class="btn btn-secondary">
-                <i class="bi bi-cc-square"></i>
+                <i class="bi bi-cc-square text-secondary"></i>
               </button>
             </td>
           </tr>
@@ -299,198 +109,51 @@
         <tbody>
           <tr>
             <th scope="col">Candelabro</th>
-            <td class="text-center">
+            <td
+              class="text-center"
+              v-for="(candelabro, key) in dataArray.candelabro"
+            >
               <button class="btn btn-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-            <td class="text-center">
-              <button class="btn btn-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-            <td class="text-center">
-              <button class="btn btn-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-            <td class="text-center">
-              <button class="btn btn-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-            <td class="text-center">
-              <button class="btn btn-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-            <td class="text-center">
-              <button class="btn btn-secondary">
-                <i class="bi bi-cc-square"></i>
+                <i class="bi bi-cc-square text-secondary"></i>
               </button>
             </td>
           </tr>
           <tr>
             <th scope="col">Daga</th>
-            <td class="text-center">
+            <td class="text-center" v-for="(daga, key) in dataArray.daga">
               <button class="btn btn-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-            <td class="text-center">
-              <button class="btn btn-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-            <td class="text-center">
-              <button class="btn btn-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-            <td class="text-center">
-              <button class="btn btn-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-            <td class="text-center">
-              <button class="btn btn-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-            <td class="text-center">
-              <button class="btn btn-secondary">
-                <i class="bi bi-cc-square"></i>
+                <i class="bi bi-cc-square text-secondary"></i>
               </button>
             </td>
           </tr>
           <tr>
             <th scope="col">Tubo de plomo</th>
-            <td class="text-center">
+            <td class="text-center" v-for="(tubo, key) in dataArray.tubo">
               <button class="btn btn-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-            <td class="text-center">
-              <button class="btn btn-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-            <td class="text-center">
-              <button class="btn btn-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-            <td class="text-center">
-              <button class="btn btn-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-            <td class="text-center">
-              <button class="btn btn-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-            <td class="text-center">
-              <button class="btn btn-secondary">
-                <i class="bi bi-cc-square"></i>
+                <i class="bi bi-cc-square text-secondary"></i>
               </button>
             </td>
           </tr>
           <tr>
             <th scope="col">Revólver</th>
-            <td class="text-center">
-              <button class="btn btn-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-            <td class="text-center">
-              <button class="btn btn-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-            <td class="text-center">
-              <button class="btn btn-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-            <td class="text-center">
-              <button class="btn btn-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-            <td class="text-center">
-              <button class="btn btn-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-            <td class="text-center">
-              <button class="btn btn-secondary">
+            <td class="text-center" v-for="(tubo, key) in dataArray.revolver">
+              <button class="btn btn-secondary text-secondary">
                 <i class="bi bi-cc-square"></i>
               </button>
             </td>
           </tr>
           <tr>
             <th scope="col">Soga</th>
-            <td class="text-center">
-              <button class="btn btn-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-            <td class="text-center">
-              <button class="btn btn-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-            <td class="text-center">
-              <button class="btn btn-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-            <td class="text-center">
-              <button class="btn btn-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-            <td class="text-center">
-              <button class="btn btn-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-            <td class="text-center">
-              <button class="btn btn-secondary">
+            <td class="text-center" v-for="(tubo, key) in dataArray.soga">
+              <button class="btn btn-secondary text-secondary">
                 <i class="bi bi-cc-square"></i>
               </button>
             </td>
           </tr>
           <tr>
             <th scope="col">Llave inglesa</th>
-            <td class="text-center">
-              <button class="btn btn-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-            <td class="text-center">
-              <button class="btn btn-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-            <td class="text-center">
-              <button class="btn btn-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-            <td class="text-center">
-              <button class="btn btn-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-            <td class="text-center">
-              <button class="btn btn-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-            <td class="text-center">
-              <button class="btn btn-secondary">
+            <td class="text-center" v-for="(tubo, key) in dataArray.llave">
+              <button class="btn btn-secondary text-secondary">
                 <i class="bi bi-cc-square"></i>
               </button>
             </td>
@@ -509,297 +172,72 @@
         <tbody>
           <tr>
             <th scope="col">Salón de baile</th>
-            <td class="text-center">
-              <button class="btn btn-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-            <td class="text-center">
-              <button class="btn btn-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-            <td class="text-center">
-              <button class="btn btn-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-            <td class="text-center">
-              <button class="btn btn-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-            <td class="text-center">
-              <button class="btn btn-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-            <td class="text-center">
-              <button class="btn btn-secondary">
+            <td class="text-center" v-for="(tubo, key) in dataArray.salon">
+              <button class="btn btn-secondary text-secondary">
                 <i class="bi bi-cc-square"></i>
               </button>
             </td>
           </tr>
           <tr>
             <th scope="col">Sala de billar</th>
-            <td class="text-center">
-              <button class="btn btn-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-            <td class="text-center">
-              <button class="btn btn-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-            <td class="text-center">
-              <button class="btn btn-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-            <td class="text-center">
-              <button class="btn btn-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-            <td class="text-center">
-              <button class="btn btn-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-            <td class="text-center">
-              <button class="btn btn-secondary">
+            <td class="text-center" v-for="(tubo, key) in dataArray.billar">
+              <button class="btn btn-secondary text-secondary">
                 <i class="bi bi-cc-square"></i>
               </button>
             </td>
           </tr>
           <tr>
             <th scope="col">Terraza</th>
-            <td class="text-center">
-              <button class="btn btn-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-            <td class="text-center">
-              <button class="btn btn-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-            <td class="text-center">
-              <button class="btn btn-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-            <td class="text-center">
-              <button class="btn btn-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-            <td class="text-center">
-              <button class="btn btn-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-            <td class="text-center">
-              <button class="btn btn-secondary">
+            <td class="text-center" v-for="(tubo, key) in dataArray.terraza">
+              <button class="btn btn-secondary text-secondary">
                 <i class="bi bi-cc-square"></i>
               </button>
             </td>
           </tr>
           <tr>
             <th scope="col">Comedor</th>
-            <td class="text-center">
-              <button class="btn btn-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-            <td class="text-center">
-              <button class="btn btn-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-            <td class="text-center">
-              <button class="btn btn-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-            <td class="text-center">
-              <button class="btn btn-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-            <td class="text-center">
-              <button class="btn btn-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-            <td class="text-center">
-              <button class="btn btn-secondary">
+            <td class="text-center" v-for="(tubo, key) in dataArray.comedor">
+              <button class="btn btn-secondary text-secondary">
                 <i class="bi bi-cc-square"></i>
               </button>
             </td>
           </tr>
           <tr>
             <th scope="col">Pasillo</th>
-            <td class="text-center">
-              <button class="btn btn-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-            <td class="text-center">
-              <button class="btn btn-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-            <td class="text-center">
-              <button class="btn btn-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-            <td class="text-center">
-              <button class="btn btn-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-            <td class="text-center">
-              <button class="btn btn-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-            <td class="text-center">
-              <button class="btn btn-secondary">
+            <td class="text-center" v-for="(tubo, key) in dataArray.pasillo">
+              <button class="btn btn-secondary text-secondary">
                 <i class="bi bi-cc-square"></i>
               </button>
             </td>
           </tr>
           <tr>
             <th scope="col">Cocina</th>
-            <td class="text-center">
-              <button class="btn btn-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-            <td class="text-center">
-              <button class="btn btn-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-            <td class="text-center">
-              <button class="btn btn-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-            <td class="text-center">
-              <button class="btn btn-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-            <td class="text-center">
-              <button class="btn btn-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-            <td class="text-center">
-              <button class="btn btn-secondary">
+            <td class="text-center" v-for="(tubo, key) in dataArray.cocina">
+              <button class="btn btn-secondary text-secondary">
                 <i class="bi bi-cc-square"></i>
               </button>
             </td>
           </tr>
           <tr>
             <th scope="col">Biblioteca</th>
-            <td class="text-center">
-              <button class="btn btn-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-            <td class="text-center">
-              <button class="btn btn-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-            <td class="text-center">
-              <button class="btn btn-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-            <td class="text-center">
-              <button class="btn btn-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-            <td class="text-center">
-              <button class="btn btn-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-            <td class="text-center">
-              <button class="btn btn-secondary">
+            <td class="text-center" v-for="(tubo, key) in dataArray.biblioteca">
+              <button class="btn btn-secondary text-secondary">
                 <i class="bi bi-cc-square"></i>
               </button>
             </td>
           </tr>
           <tr>
             <th scope="col">Sala</th>
-            <td class="text-center">
-              <button class="btn btn-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-            <td class="text-center">
-              <button class="btn btn-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-            <td class="text-center">
-              <button class="btn btn-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-            <td class="text-center">
-              <button class="btn btn-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-            <td class="text-center">
-              <button class="btn btn-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-            <td class="text-center">
-              <button class="btn btn-secondary">
+            <td class="text-center" v-for="(tubo, key) in dataArray.sala">
+              <button class="btn btn-secondary text-secondary">
                 <i class="bi bi-cc-square"></i>
               </button>
             </td>
           </tr>
           <tr>
             <th scope="col">Estudio</th>
-            <td class="text-center">
-              <button class="btn btn-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-            <td class="text-center">
-              <button class="btn btn-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-            <td class="text-center">
-              <button class="btn btn-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-            <td class="text-center">
-              <button class="btn btn-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-            <td class="text-center">
-              <button class="btn btn-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-            <td class="text-center">
-              <button class="btn btn-secondary">
+            <td class="text-center" v-for="(tubo, key) in dataArray.estudio">
+              <button class="btn btn-secondary text-secondary">
                 <i class="bi bi-cc-square"></i>
               </button>
             </td>
