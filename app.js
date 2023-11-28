@@ -33,8 +33,14 @@ createApp({
   mounted() {
     for (let item in this.dataArray) {
       if (item == 'name') {
-        this.dataArray.name[0] = 'Juan';
-      } else this.dataArray[item][0] = false;
+        for (let cont = 0; cont < this.players; cont++) {
+          this.dataArray.name[cont] = 'Juan ' + (cont + 1);
+        }
+      } else {
+        for (let cont = 0; cont < this.players; cont++) {
+          this.dataArray[item][cont] = false;
+        }
+      }
     }
     console.log(
       '🚀 ~ file: app.js:35 ~ mounted ~ this.dataArray:',
