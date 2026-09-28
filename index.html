@@ -1,301 +1,952 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es" data-theme="dark">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Clue App</title>
+    <title>Clue Detective - Libreta de Juego</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <!-- Bootstrap 5 CSS -->
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
       rel="stylesheet"
       integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
       crossorigin="anonymous"
     />
+    <!-- Bootstrap Icons -->
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css"
     />
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="./styles.css" />
   </head>
-  <body class="bg-primary-subtle">
-    <div class="container bg-light my-5 py-5" id="app">
-      <h1 class="text-center">Clue</h1>
-
-      <!-- Start who? -->
-      <table class="table">
-        <thead>
-          <tr>
-            <th scope="col" class="w-25"><h3>¿Quién?</h3></th>
-            <th scope="col" v-for="(name, key) in dataArray.name">
-              <div class="input-group">
-                <span class="input-group-text" id="basic-addon1">1</span>
-                <input
-                  type="text"
-                  class="form-control form-control-sm"
-                  aria-describedby="basic-addon1"
-                  v-model="dataArray.name[key]"
-                />
-              </div>
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <th scope="col">Verduzco</th>
-            <td
-              class="text-center"
-              v-for="(verduzco, key) in dataArray.verduzco"
-            >
-              <button class="btn btn-secondary text-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-          </tr>
-          <tr>
-            <th scope="col">Mostaza</th>
-            <td class="text-center" v-for="(mostaza, key) in dataArray.mostaza">
-              <button class="btn btn-secondary text-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-          </tr>
-          <tr>
-            <th scope="col">Marlene</th>
-            <td class="text-center" v-for="(marlene, key) in dataArray.marlene">
-              <button class="btn btn-secondary text-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-          </tr>
-          <tr>
-            <th scope="col">Moradillo</th>
-            <td
-              class="text-center"
-              v-for="(moradillo, key) in dataArray.moradillo"
-            >
-              <button class="btn btn-secondary text-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-          </tr>
-          <tr>
-            <th scope="col">Escarlata</th>
-            <td
-              class="text-center"
-              v-for="(escarlata, key) in dataArray.escarlata"
-            >
-              <button class="btn btn-secondary text-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-          </tr>
-          <tr>
-            <th scope="col">Blanca</th>
-            <td class="text-center" v-for="(blanca, key) in dataArray.blanca">
-              <button class="btn btn-secondary text-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <!-- End who -->
-
-      <!-- Start with which -->
-      <table class="table">
-        <thead>
-          <tr>
-            <th scope="col" colspan="7"><h3>¿Con qué?</h3></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <th scope="col">Candelabro</th>
-            <td
-              class="text-center"
-              v-for="(candelabro, key) in dataArray.candelabro"
-            >
-              <button class="btn btn-secondary text-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-          </tr>
-          <tr>
-            <th scope="col">Daga</th>
-            <td class="text-center" v-for="(daga, key) in dataArray.daga">
-              <button class="btn btn-secondary text-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-          </tr>
-          <tr>
-            <th scope="col">Tubo de plomo</th>
-            <td class="text-center" v-for="(tubo, key) in dataArray.tubo">
-              <button class="btn btn-secondary text-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-          </tr>
-          <tr>
-            <th scope="col">Revólver</th>
-            <td class="text-center" v-for="(tubo, key) in dataArray.revolver">
-              <button class="btn btn-secondary text-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-          </tr>
-          <tr>
-            <th scope="col">Soga</th>
-            <td class="text-center" v-for="(tubo, key) in dataArray.soga">
-              <button class="btn btn-secondary text-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-          </tr>
-          <tr>
-            <th scope="col">Llave inglesa</th>
-            <td class="text-center" v-for="(tubo, key) in dataArray.llave">
-              <button class="btn btn-secondary text-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <!-- End with which -->
-
-      <!-- Start where -->
-      <table class="table">
-        <thead>
-          <tr>
-            <th scope="col" colspan="7"><h3>¿Dónde?</h3></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <th scope="col">Salón de baile</th>
-            <td class="text-center" v-for="(tubo, key) in dataArray.salon">
-              <button class="btn btn-secondary text-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-          </tr>
-          <tr>
-            <th scope="col">Sala de billar</th>
-            <td class="text-center" v-for="(tubo, key) in dataArray.billar">
-              <button class="btn btn-secondary text-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-          </tr>
-          <tr>
-            <th scope="col">Terraza</th>
-            <td class="text-center" v-for="(tubo, key) in dataArray.terraza">
-              <button class="btn btn-secondary text-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-          </tr>
-          <tr>
-            <th scope="col">Comedor</th>
-            <td class="text-center" v-for="(tubo, key) in dataArray.comedor">
-              <button class="btn btn-secondary text-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-          </tr>
-          <tr>
-            <th scope="col">Pasillo</th>
-            <td class="text-center" v-for="(tubo, key) in dataArray.pasillo">
-              <button class="btn btn-secondary text-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-          </tr>
-          <tr>
-            <th scope="col">Cocina</th>
-            <td class="text-center" v-for="(tubo, key) in dataArray.cocina">
-              <button class="btn btn-secondary text-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-          </tr>
-          <tr>
-            <th scope="col">Biblioteca</th>
-            <td class="text-center" v-for="(tubo, key) in dataArray.biblioteca">
-              <button class="btn btn-secondary text-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-          </tr>
-          <tr>
-            <th scope="col">Sala</th>
-            <td class="text-center" v-for="(tubo, key) in dataArray.sala">
-              <button class="btn btn-secondary text-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-          </tr>
-          <tr>
-            <th scope="col">Estudio</th>
-            <td class="text-center" v-for="(tubo, key) in dataArray.estudio">
-              <button class="btn btn-secondary text-secondary">
-                <i class="bi bi-cc-square"></i>
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <!-- End where -->
-    </div>
-    <!-- Modal -->
-    <div
-      class="modal fade"
-      id="selectPlayers"
-      data-bs-backdrop="static"
-      data-bs-keyboard="false"
-      tabindex="-1"
-      aria-labelledby="selectPlayersLabel"
-      aria-hidden="true"
-    >
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h1 class="modal-title fs-5" id="selectPlayersLabel">
-              Select number of players
-            </h1>
-            <button
-              type="button"
-              class="btn-close"
-              data-bs-dismiss="modal"
-              aria-label="Close"
-            ></button>
+  <body>
+    <div id="app" v-cloak>
+      <!-- Top Sticky App Bar -->
+      <header class="app-header py-2 px-3 mb-3">
+        <div class="container-fluid d-flex flex-wrap align-items-center justify-content-between gap-2">
+          <!-- Brand -->
+          <div class="d-flex align-items-center gap-2">
+            <i class="bi bi-incognito text-warning fs-3"></i>
+            <div>
+              <h1 class="brand-title h4 m-0">CLUE</h1>
+              <span class="badge badge-detective py-0 px-2">Libreta de Detective</span>
+            </div>
           </div>
-          <div class="modal-body">...</div>
-          <div class="modal-footer">
+
+          <!-- Quick Action Buttons -->
+          <div class="d-flex align-items-center flex-wrap gap-2">
+            <!-- Undo Button -->
             <button
-              type="button"
-              class="btn btn-secondary"
-              data-bs-dismiss="modal"
+              class="btn btn-sm btn-outline-secondary text-light d-flex align-items-center gap-1"
+              :disabled="!canUndo"
+              @click="undo"
+              title="Deshacer último cambio (Ctrl+Z)"
             >
-              Close
+              <i class="bi bi-arrow-counterclockwise"></i>
+              <span class="d-none d-sm-inline">Deshacer</span>
             </button>
-            <button type="button" class="btn btn-primary">Understood</button>
+
+            <!-- Starting Hand -->
+            <button
+              class="btn btn-sm btn-outline-warning d-flex align-items-center gap-1"
+              @click="openHandModal"
+              title="Anotar cartas iniciales de tu mano"
+            >
+              <i class="bi bi-suit-spade-fill"></i>
+              <span class="d-none d-sm-inline">Mi Mano</span>
+            </button>
+
+            <!-- Suggestion / Turn Tracker -->
+            <button
+              class="btn btn-sm btn-outline-info d-flex align-items-center gap-1"
+              @click="openSuggestionModal"
+              title="Registrar sospecha o pregunta de turno"
+            >
+              <i class="bi bi-chat-left-quote-fill"></i>
+              <span class="d-none d-sm-inline">Pregunta</span>
+              <span
+                v-if="suggestions.length > 0"
+                class="badge bg-info text-dark rounded-pill ms-1"
+              >{{ suggestions.length }}</span>
+            </button>
+
+            <!-- Players Config -->
+            <button
+              class="btn btn-sm btn-outline-secondary text-light d-flex align-items-center gap-1"
+              @click="openPlayerModal"
+              title="Configurar jugadores"
+            >
+              <i class="bi bi-people-fill"></i>
+              <span class="d-none d-md-inline">Jugadores ({{ players.length }})</span>
+            </button>
+
+            <!-- Export / Copy Summary -->
+            <button
+              class="btn btn-sm btn-outline-light d-flex align-items-center gap-1"
+              @click="exportSummary"
+              title="Copiar resumen del caso al portapapeles"
+            >
+              <i class="bi bi-clipboard-check"></i>
+              <span class="d-none d-md-inline">Compartir</span>
+            </button>
+
+            <!-- Reset Game -->
+            <button
+              class="btn btn-sm btn-outline-danger d-flex align-items-center gap-1"
+              data-bs-toggle="modal"
+              data-bs-target="#resetModal"
+              title="Nueva partida / Reiniciar"
+            >
+              <i class="bi bi-arrow-repeat"></i>
+              <span class="d-none d-md-inline">Reiniciar</span>
+            </button>
+
+            <!-- Theme Toggle -->
+            <button
+              class="btn btn-sm btn-outline-light"
+              @click="toggleTheme"
+              :title="theme === 'dark' ? 'Cambiar a modo claro' : 'Cambiar a modo detective oscuro'"
+            >
+              <i :class="theme === 'dark' ? 'bi bi-sun-fill text-warning' : 'bi bi-moon-stars-fill'"></i>
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <!-- Main Content Container -->
+      <main class="container-fluid px-3 px-lg-4 pb-5">
+        <!-- Toast Feedback for Copied Summary -->
+        <div
+          v-if="copyNotification"
+          class="alert alert-success py-2 px-3 d-flex align-items-center gap-2 mb-3 shadow-sm"
+          role="alert"
+        >
+          <i class="bi bi-check-circle-fill"></i>
+          <div>¡Resumen del caso copiado al portapapeles!</div>
+        </div>
+
+        <!-- Fully Solved Banner -->
+        <div v-if="caseSolution.isFullySolved" class="case-solved-banner">
+          <div class="d-flex align-items-center gap-2">
+            <i class="bi bi-trophy-fill fs-3"></i>
+            <div>
+              <strong class="h5 m-0 d-block">¡CASO TOTALMENTE RESUELTO!</strong>
+              <span>
+                El asesino fue <strong>{{ caseSolution.suspect.item.name }}</strong> con el arma
+                <strong>{{ caseSolution.weapon.item.name }}</strong> en la habitación
+                <strong>{{ caseSolution.room.item.name }}</strong>.
+              </span>
+            </div>
+          </div>
+          <button class="btn btn-sm btn-dark" @click="exportSummary">
+            <i class="bi bi-clipboard"></i> Copiar Acusación
+          </button>
+        </div>
+
+        <!-- Dossier Summary Cards (Case File Envelope) -->
+        <section class="row g-2 mb-3">
+          <!-- Suspect Dossier -->
+          <div class="col-12 col-md-4">
+            <div class="dossier-card" :class="{ solved: caseSolution.suspect.solved }">
+              <div class="d-flex justify-content-between align-items-center mb-1">
+                <span class="dossier-label">
+                  <i class="bi bi-person-badge-fill me-1 text-danger"></i> Asesino Confidencial
+                </span>
+                <span
+                  class="badge"
+                  :class="caseSolution.suspect.solved ? 'bg-success' : 'bg-secondary'"
+                >
+                  {{ caseSolution.suspect.solved ? 'RESUELTO' : `${caseSolution.suspect.candidatesCount} opciones` }}
+                </span>
+              </div>
+              <div class="dossier-value d-flex align-items-center gap-2">
+                <template v-if="caseSolution.suspect.solved">
+                  <span
+                    class="card-color-dot"
+                    :style="{ backgroundColor: caseSolution.suspect.item.color, color: caseSolution.suspect.item.color }"
+                  ></span>
+                  <span>{{ caseSolution.suspect.item.name }}</span>
+                  <i class="bi bi-patch-check-fill text-warning fs-5 ms-auto"></i>
+                </template>
+                <template v-else>
+                  <span class="text-secondary">¿Desconocido?</span>
+                </template>
+              </div>
+            </div>
+          </div>
+
+          <!-- Weapon Dossier -->
+          <div class="col-12 col-md-4">
+            <div class="dossier-card" :class="{ solved: caseSolution.weapon.solved }">
+              <div class="d-flex justify-content-between align-items-center mb-1">
+                <span class="dossier-label">
+                  <i class="bi bi-crosshair me-1 text-warning"></i> Arma Homicida
+                </span>
+                <span
+                  class="badge"
+                  :class="caseSolution.weapon.solved ? 'bg-success' : 'bg-secondary'"
+                >
+                  {{ caseSolution.weapon.solved ? 'RESUELTO' : `${caseSolution.weapon.candidatesCount} opciones` }}
+                </span>
+              </div>
+              <div class="dossier-value d-flex align-items-center gap-2">
+                <template v-if="caseSolution.weapon.solved">
+                  <i :class="caseSolution.weapon.item.icon" class="text-warning"></i>
+                  <span>{{ caseSolution.weapon.item.name }}</span>
+                  <i class="bi bi-patch-check-fill text-warning fs-5 ms-auto"></i>
+                </template>
+                <template v-else>
+                  <span class="text-secondary">¿Desconocida?</span>
+                </template>
+              </div>
+            </div>
+          </div>
+
+          <!-- Room Dossier -->
+          <div class="col-12 col-md-4">
+            <div class="dossier-card" :class="{ solved: caseSolution.room.solved }">
+              <div class="d-flex justify-content-between align-items-center mb-1">
+                <span class="dossier-label">
+                  <i class="bi bi-geo-alt-fill me-1 text-info"></i> Escenario del Crimen
+                </span>
+                <span
+                  class="badge"
+                  :class="caseSolution.room.solved ? 'bg-success' : 'bg-secondary'"
+                >
+                  {{ caseSolution.room.solved ? 'RESUELTO' : `${caseSolution.room.candidatesCount} opciones` }}
+                </span>
+              </div>
+              <div class="dossier-value d-flex align-items-center gap-2">
+                <template v-if="caseSolution.room.solved">
+                  <i :class="caseSolution.room.item.icon" class="text-info"></i>
+                  <span>{{ caseSolution.room.item.name }}</span>
+                  <i class="bi bi-patch-check-fill text-warning fs-5 ms-auto"></i>
+                </template>
+                <template v-else>
+                  <span class="text-secondary">¿Desconocida?</span>
+                </template>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Filters, Search & Legend Toolbar -->
+        <section class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-3">
+          <!-- Category Filter Pills -->
+          <div class="nav-pills-custom d-flex flex-wrap gap-1">
+            <button
+              class="btn"
+              :class="{ active: activeFilter === 'all' }"
+              @click="activeFilter = 'all'"
+            >
+              Todos (21)
+            </button>
+            <button
+              class="btn"
+              :class="{ active: activeFilter === 'suspects' }"
+              @click="activeFilter = 'suspects'"
+            >
+              <i class="bi bi-person-fill me-1"></i>¿Quién? (6)
+            </button>
+            <button
+              class="btn"
+              :class="{ active: activeFilter === 'weapons' }"
+              @click="activeFilter = 'weapons'"
+            >
+              <i class="bi bi-crosshair me-1"></i>¿Con qué? (6)
+            </button>
+            <button
+              class="btn"
+              :class="{ active: activeFilter === 'rooms' }"
+              @click="activeFilter = 'rooms'"
+            >
+              <i class="bi bi-door-open-fill me-1"></i>¿Dónde? (9)
+            </button>
+            <button
+              class="btn"
+              :class="{ active: activeFilter === 'unsolved' }"
+              @click="activeFilter = 'unsolved'"
+            >
+              <i class="bi bi-question-circle me-1"></i>Sin Resolver
+            </button>
+          </div>
+
+          <!-- Search Input & Auto-deduce toggle -->
+          <div class="d-flex align-items-center gap-2 ms-auto">
+            <div class="input-group input-group-sm" style="max-width: 200px;">
+              <span class="input-group-text bg-body-tertiary border-secondary-subtle">
+                <i class="bi bi-search"></i>
+              </span>
+              <input
+                type="text"
+                class="form-control form-control-sm"
+                placeholder="Buscar carta..."
+                v-model="searchQuery"
+              />
+              <button
+                v-if="searchQuery"
+                class="btn btn-outline-secondary"
+                type="button"
+                @click="searchQuery = ''"
+              >
+                <i class="bi bi-x"></i>
+              </button>
+            </div>
+
+            <!-- Auto-deduce switch -->
+            <div class="form-check form-switch m-0 d-none d-lg-block" title="Deduce automáticamente cartas descartadas">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                role="switch"
+                id="autoDeduceSwitch"
+                v-model="autoDeduce"
+              />
+              <label class="form-check-label small text-muted" for="autoDeduceSwitch">
+                Asistente
+              </label>
+            </div>
+          </div>
+        </section>
+
+        <!-- Interactive Legend -->
+        <div class="d-flex flex-wrap align-items-center gap-2 mb-2 px-1">
+          <small class="text-secondary fw-semibold">Estados:</small>
+          <span class="legend-pill">
+            <span class="cell-btn state-no" style="width: 20px; height: 20px; font-size: 0.75rem;">✕</span>
+            No tiene
+          </span>
+          <span class="legend-pill">
+            <span class="cell-btn state-yes" style="width: 20px; height: 20px; font-size: 0.75rem;">✓</span>
+            Tiene (descarta otros)
+          </span>
+          <span class="legend-pill">
+            <span class="cell-btn state-maybe" style="width: 20px; height: 20px; font-size: 0.75rem;">?</span>
+            Duda / Preguntada
+          </span>
+          <span class="legend-pill">
+            <span class="cell-btn state-envelope-solved" style="width: 20px; height: 20px; font-size: 0.75rem;">★</span>
+            En el sobre
+          </span>
+          <small class="text-secondary ms-auto d-none d-md-inline">
+            <i class="bi bi-hand-index-thumb"></i> Clic en celda para cambiar de estado
+          </small>
+        </div>
+
+        <!-- Clue Table Container -->
+        <div class="table-responsive-wrapper">
+          <div class="clue-table-container">
+            <table class="clue-table">
+              <thead>
+                <tr>
+                  <!-- Card Column Header (Sticky) -->
+                  <th scope="col" class="sticky-col">
+                    <div class="d-flex align-items-center justify-content-between">
+                      <span class="fw-bold">Cartas del Juego</span>
+                      <small class="text-muted fw-normal">21 cartas</small>
+                    </div>
+                  </th>
+
+                  <!-- Envelope Column (Case File) -->
+                  <th scope="col" class="envelope-col-header text-center">
+                    <div title="Sobre confidencial con la solución del crimen">
+                      <i class="bi bi-envelope-paper-heart-fill fs-5 d-block text-warning"></i>
+                      <span class="small fw-bold">Sobre</span>
+                    </div>
+                  </th>
+
+                  <!-- Player Columns -->
+                  <th scope="col" v-for="player in players" :key="player.id">
+                    <div class="player-header-card">
+                      <div class="d-flex align-items-center gap-1">
+                        <span
+                          class="player-name-badge"
+                          @click="openPlayerModal"
+                          :title="'Editar ' + player.name"
+                        >
+                          {{ player.name }}
+                        </span>
+                        <span v-if="player.isMe" class="player-you-tag">Tú</span>
+                      </div>
+                      <span class="player-count-badge">
+                        <i class="bi bi-card-checklist"></i> {{ getPlayerCardCount(player.id) }} cartas
+                      </span>
+                    </div>
+                  </th>
+                </tr>
+              </thead>
+
+              <tbody>
+                <template v-for="category in filteredCategories" :key="category.id">
+                  <!-- Category Header Separator -->
+                  <tr class="category-header-row">
+                    <td :colspan="players.length + 2">
+                      <i :class="category.icon" class="me-2"></i>
+                      <span>{{ category.name }}</span>
+                    </td>
+                  </tr>
+
+                  <!-- Cards in this category -->
+                  <tr
+                    v-for="item in category.items"
+                    :key="item.id"
+                    :class="{ 'solved-row': envelope[item.id] === 'yes' }"
+                  >
+                    <!-- Sticky Card Name Cell -->
+                    <td class="sticky-col">
+                      <div class="card-label">
+                        <span
+                          class="card-color-dot"
+                          :style="{ backgroundColor: item.color, color: item.color }"
+                        ></span>
+                        <i :class="item.icon" class="card-icon text-muted"></i>
+                        <div class="flex-grow-1">
+                          <div class="d-flex align-items-center gap-1">
+                            <span class="fw-semibold">{{ item.name }}</span>
+                            <!-- Note Icon/Trigger -->
+                            <button
+                              class="btn btn-link p-0 text-decoration-none"
+                              :class="notes[item.id] ? 'text-warning' : 'text-secondary-subtle'"
+                              @click="openNoteModal(item)"
+                              :title="notes[item.id] ? 'Nota: ' + notes[item.id] : 'Agregar nota'"
+                              style="font-size: 0.8rem; line-height: 1;"
+                            >
+                              <i :class="notes[item.id] ? 'bi bi-sticky-fill' : 'bi bi-sticky'"></i>
+                            </button>
+                          </div>
+                          <small v-if="item.subtitle" class="text-secondary d-block" style="font-size: 0.72rem;">
+                            {{ item.subtitle }}
+                          </small>
+                          <small v-if="notes[item.id]" class="text-warning d-block text-truncate" style="font-size: 0.7rem; max-width: 150px;">
+                            "{{ notes[item.id] }}"
+                          </small>
+                        </div>
+                      </div>
+                    </td>
+
+                    <!-- Envelope Status Cell -->
+                    <td class="envelope-cell text-center">
+                      <button
+                        class="cell-btn"
+                        :class="{
+                          'state-envelope-solved': envelope[item.id] === 'yes',
+                          'state-no': envelope[item.id] === 'no',
+                        }"
+                        @click="toggleEnvelope(item.id)"
+                        :title="
+                          envelope[item.id] === 'yes'
+                            ? '¡Confirmado en el sobre!'
+                            : envelope[item.id] === 'no'
+                            ? 'Descartado del sobre'
+                            : 'Clic para marcar solución del sobre'
+                        "
+                      >
+                        <span v-if="envelope[item.id] === 'yes'">★</span>
+                        <span v-else-if="envelope[item.id] === 'no'">✕</span>
+                        <span v-else class="text-muted" style="opacity: 0.3;">·</span>
+                      </button>
+                    </td>
+
+                    <!-- Player Cells -->
+                    <td
+                      v-for="player in players"
+                      :key="player.id"
+                      class="text-center"
+                    >
+                      <button
+                        class="cell-btn"
+                        :class="getCellClass(item.id, player.id)"
+                        @click="toggleCell(item.id, player.id)"
+                        :title="
+                          getCellState(item.id, player.id) === 'yes'
+                            ? player.name + ' tiene esta carta'
+                            : getCellState(item.id, player.id) === 'no'
+                            ? player.name + ' NO tiene esta carta'
+                            : getCellState(item.id, player.id) === 'maybe'
+                            ? 'Duda sobre ' + player.name
+                            : 'Clic para marcar estado'
+                        "
+                      >
+                        <span v-if="getCellState(item.id, player.id) === 'no'">✕</span>
+                        <span v-else-if="getCellState(item.id, player.id) === 'yes'">✓</span>
+                        <span v-else-if="getCellState(item.id, player.id) === 'maybe'">?</span>
+                        <span v-else class="text-muted" style="opacity: 0.2;">·</span>
+                      </button>
+                    </td>
+                  </tr>
+                </template>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Suggestion / Question Log History Accordion -->
+        <section v-if="suggestions.length > 0" class="mt-4">
+          <div class="d-flex align-items-center justify-content-between mb-2">
+            <h2 class="h6 text-warning mb-0 font-monospace">
+              <i class="bi bi-journal-bookmark-fill me-1"></i> DIARIO DE PREGUNTAS ({{ suggestions.length }})
+            </h2>
+            <button
+              class="btn btn-sm btn-outline-secondary"
+              @click="openSuggestionModal"
+            >
+              <i class="bi bi-plus-lg"></i> Nueva Pregunta
+            </button>
+          </div>
+
+          <div class="list-group shadow-sm">
+            <div
+              v-for="entry in suggestions"
+              :key="entry.id"
+              class="list-group-item list-group-item-action bg-body-tertiary text-light border-secondary-subtle d-flex flex-wrap align-items-center justify-content-between gap-2 py-2"
+            >
+              <div class="d-flex align-items-center gap-2 flex-wrap">
+                <span class="badge bg-dark border border-secondary text-secondary">{{ entry.timestamp }}</span>
+                <span>
+                  <strong>{{ entry.askerName }}</strong> preguntó a <strong>{{ entry.targetName }}</strong> por:
+                </span>
+                <span class="badge bg-danger-subtle text-danger border border-danger-subtle">
+                  {{ entry.suspect.name }}
+                </span>
+                <span class="badge bg-warning-subtle text-warning border border-warning-subtle">
+                  {{ entry.weapon.name }}
+                </span>
+                <span class="badge bg-info-subtle text-info border border-info-subtle">
+                  {{ entry.room.name }}
+                </span>
+              </div>
+
+              <div class="d-flex align-items-center gap-2">
+                <span
+                  class="badge"
+                  :class="entry.showed ? 'bg-success' : 'bg-danger'"
+                >
+                  {{ entry.showed ? 'Mostró carta' : 'No tenía ninguna' }}
+                </span>
+                <span v-if="entry.cardShown" class="badge bg-warning text-dark">
+                  Viste: {{ entry.cardShown.name }}
+                </span>
+                <button
+                  class="btn btn-sm text-secondary p-0"
+                  @click="removeSuggestion(entry.id)"
+                  title="Eliminar registro"
+                >
+                  <i class="bi bi-trash"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <!-- ================= MODALS ================= -->
+
+      <!-- 1. Players Configuration Modal -->
+      <div
+        class="modal fade"
+        id="playersModal"
+        tabindex="-1"
+        aria-labelledby="playersModalLabel"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="playersModalLabel">
+                <i class="bi bi-people-fill me-2"></i> Configurar Jugadores
+              </h5>
+              <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <!-- Player Count Selector -->
+              <div class="mb-3">
+                <label class="form-label fw-semibold">Número de jugadores (2 a 6)</label>
+                <div class="d-flex gap-2">
+                  <button
+                    v-for="count in [2, 3, 4, 5, 6]"
+                    :key="count"
+                    type="button"
+                    class="btn flex-fill"
+                    :class="newPlayerCount === count ? 'btn-warning fw-bold' : 'btn-outline-secondary'"
+                    @click="newPlayerCount = count; applyPlayerCount()"
+                  >
+                    {{ count }}
+                  </button>
+                </div>
+              </div>
+
+              <hr class="border-secondary my-3" />
+
+              <!-- Player Names and 'Me' selector -->
+              <div class="mb-2">
+                <label class="form-label fw-semibold">Nombres de los jugadores</label>
+                <div
+                  v-for="(player, index) in players"
+                  :key="player.id"
+                  class="input-group input-group-sm mb-2"
+                >
+                  <span class="input-group-text bg-body-tertiary border-secondary-subtle">
+                    #{{ index + 1 }}
+                  </span>
+                  <input
+                    type="text"
+                    class="form-control"
+                    v-model="player.name"
+                    :placeholder="'Jugador ' + (index + 1)"
+                  />
+                  <button
+                    type="button"
+                    class="btn btn-outline-warning"
+                    :class="{ active: player.isMe }"
+                    @click="setMe(player.id)"
+                    title="Marcar quién eres tú"
+                  >
+                    {{ player.isMe ? '✓ Tú' : 'Soy yo' }}
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-warning w-100" data-bs-dismiss="modal">
+                Listo
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. Starting Hand Modal (Mi Mano) -->
+      <div
+        class="modal fade"
+        id="handModal"
+        tabindex="-1"
+        aria-labelledby="handModalLabel"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+          <div class="modal-content">
+            <div class="modal-header d-flex justify-content-between align-items-center">
+              <h5 class="modal-title mb-0" id="handModalLabel">
+                <i class="bi bi-suit-spade-fill me-2"></i> Mis Cartas Iniciales
+              </h5>
+              <div class="d-flex align-items-center gap-2">
+                <span class="badge bg-warning text-dark fw-bold">
+                  {{ selectedHandCount }} seleccionadas
+                </span>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+            </div>
+            <div class="modal-body">
+              <p class="text-secondary small mb-3">
+                Selecciona las cartas que te repartieron al inicio. Se marcarán con <strong>✓</strong> para ti y se descartarán automáticamente para todos los demás jugadores y el sobre confidencial.
+              </p>
+
+              <div class="row g-3">
+                <div v-for="category in CATEGORIES" :key="category.id" class="col-12 col-md-4">
+                  <h6 class="text-warning border-bottom border-secondary pb-1">
+                    <i :class="category.icon" class="me-1"></i> {{ category.shortName }}
+                  </h6>
+                  <div class="form-check my-2" v-for="item in category.items" :key="item.id">
+                    <input
+                      class="form-check-input"
+                      type="checkbox"
+                      :id="'hand_' + item.id"
+                      v-model="handSelection[item.id]"
+                    />
+                    <label class="form-check-label d-flex align-items-center gap-2" :for="'hand_' + item.id">
+                      <span
+                        class="card-color-dot"
+                        :style="{ backgroundColor: item.color, color: item.color }"
+                      ></span>
+                      <span>{{ item.name }}</span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              <button type="button" class="btn btn-warning" @click="applyStartingHand">
+                Guardar Mi Mano ({{ selectedHandCount }} cartas)
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. Suggestion / Question Modal -->
+      <div
+        class="modal fade"
+        id="suggestionModal"
+        tabindex="-1"
+        aria-labelledby="suggestionModalLabel"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="suggestionModalLabel">
+                <i class="bi bi-chat-left-quote-fill me-2"></i> Registrar Pregunta / Sospecha
+              </h5>
+              <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <!-- Asker and Target -->
+              <div class="row g-2 mb-3">
+                <div class="col-6">
+                  <label class="form-label small fw-semibold">¿Quién preguntó?</label>
+                  <select class="form-select form-select-sm" v-model="suggestionForm.askerId">
+                    <option v-for="p in players" :key="p.id" :value="p.id">
+                      {{ p.name }} {{ p.isMe ? '(Tú)' : '' }}
+                    </option>
+                  </select>
+                </div>
+                <div class="col-6">
+                  <label class="form-label small fw-semibold">¿A quién preguntó?</label>
+                  <select class="form-select form-select-sm" v-model="suggestionForm.targetId">
+                    <option v-for="p in players" :key="p.id" :value="p.id">
+                      {{ p.name }} {{ p.isMe ? '(Tú)' : '' }}
+                    </option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Suspect, Weapon, Room -->
+              <div class="mb-3">
+                <label class="form-label small fw-semibold">Sospecha formulada</label>
+                <div class="d-flex flex-column gap-2">
+                  <div class="input-group input-group-sm">
+                    <span class="input-group-text bg-danger-subtle text-danger" style="width: 110px;">
+                      <i class="bi bi-person-fill me-1"></i> Sospechoso
+                    </span>
+                    <select class="form-select form-select-sm" v-model="suggestionForm.suspectId">
+                      <option
+                        v-for="s in CATEGORIES[0].items"
+                        :key="s.id"
+                        :value="s.id"
+                      >
+                        {{ s.name }}
+                      </option>
+                    </select>
+                  </div>
+
+                  <div class="input-group input-group-sm">
+                    <span class="input-group-text bg-warning-subtle text-warning" style="width: 110px;">
+                      <i class="bi bi-crosshair me-1"></i> Arma
+                    </span>
+                    <select class="form-select form-select-sm" v-model="suggestionForm.weaponId">
+                      <option
+                        v-for="w in CATEGORIES[1].items"
+                        :key="w.id"
+                        :value="w.id"
+                      >
+                        {{ w.name }}
+                      </option>
+                    </select>
+                  </div>
+
+                  <div class="input-group input-group-sm">
+                    <span class="input-group-text bg-info-subtle text-info" style="width: 110px;">
+                      <i class="bi bi-door-open-fill me-1"></i> Habitación
+                    </span>
+                    <select class="form-select form-select-sm" v-model="suggestionForm.roomId">
+                      <option
+                        v-for="r in CATEGORIES[2].items"
+                        :key="r.id"
+                        :value="r.id"
+                      >
+                        {{ r.name }}
+                      </option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Outcome: Showed card or not? -->
+              <div class="mb-3">
+                <label class="form-label small fw-semibold">¿Mostró carta el jugador?</label>
+                <div class="btn-group w-100" role="group">
+                  <input
+                    type="radio"
+                    class="btn-check"
+                    name="showedRadio"
+                    id="showedYes"
+                    value="yes"
+                    v-model="suggestionForm.showed"
+                  />
+                  <label class="btn btn-outline-success" for="showedYes">
+                    <i class="bi bi-check-circle-fill me-1"></i> Sí mostró carta
+                  </label>
+
+                  <input
+                    type="radio"
+                    class="btn-check"
+                    name="showedRadio"
+                    id="showedNo"
+                    value="no"
+                    v-model="suggestionForm.showed"
+                  />
+                  <label class="btn btn-outline-danger" for="showedNo">
+                    <i class="bi bi-x-circle-fill me-1"></i> Pasó (No tenía)
+                  </label>
+                </div>
+              </div>
+
+              <!-- If No, option to auto-mark ✕ -->
+              <div v-if="suggestionForm.showed === 'no'" class="form-check form-switch mb-3">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  role="switch"
+                  id="autoMarkNoCheck"
+                  v-model="suggestionForm.autoMarkNo"
+                />
+                <label class="form-check-label small" for="autoMarkNoCheck">
+                  Marcar automáticamente <strong>✕</strong> en las 3 cartas para ese jugador
+                </label>
+              </div>
+
+              <!-- If Yes and asked to me or I saw it -->
+              <div v-if="suggestionForm.showed === 'yes'" class="mb-3">
+                <label class="form-label small fw-semibold">¿Pudiste ver qué carta mostró? (Opcional)</label>
+                <select class="form-select form-select-sm" v-model="suggestionForm.cardShownId">
+                  <option value="">No la vi (la mostró a otro)</option>
+                  <option :value="suggestionForm.suspectId">
+                    Sospechoso: {{ CATEGORIES[0].items.find(i => i.id === suggestionForm.suspectId)?.name }}
+                  </option>
+                  <option :value="suggestionForm.weaponId">
+                    Arma: {{ CATEGORIES[1].items.find(i => i.id === suggestionForm.weaponId)?.name }}
+                  </option>
+                  <option :value="suggestionForm.roomId">
+                    Habitación: {{ CATEGORIES[2].items.find(i => i.id === suggestionForm.roomId)?.name }}
+                  </option>
+                </select>
+                <small v-if="suggestionForm.cardShownId" class="text-success d-block mt-1">
+                  Se marcará con <strong>✓</strong> para el jugador.
+                </small>
+              </div>
+            </div>
+
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              <button type="button" class="btn btn-warning" @click="saveSuggestion">
+                Guardar en Diario
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. Card Note Modal -->
+      <div
+        class="modal fade"
+        id="noteModal"
+        tabindex="-1"
+        aria-labelledby="noteModalLabel"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="noteModalLabel">
+                <i class="bi bi-sticky-fill text-warning me-2"></i> Nota para la carta
+              </h5>
+              <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <label class="form-label small text-secondary">
+                Anota pistas, probabilidades o deducciones específicas:
+              </label>
+              <input
+                type="text"
+                class="form-control"
+                v-model="noteText"
+                placeholder="Ej. Juan o Pedro la tienen; Mostrada en ronda 2"
+                maxlength="100"
+                @keyup.enter="saveNote"
+              />
+            </div>
+            <div class="modal-footer">
+              <button
+                v-if="noteText"
+                type="button"
+                class="btn btn-outline-danger me-auto btn-sm"
+                @click="noteText = ''; saveNote()"
+              >
+                Borrar Nota
+              </button>
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+              <button type="button" class="btn btn-warning" @click="saveNote">Guardar Nota</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 5. Reset Confirmation Modal -->
+      <div
+        class="modal fade"
+        id="resetModal"
+        tabindex="-1"
+        aria-labelledby="resetModalLabel"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title text-danger" id="resetModalLabel">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i> Reiniciar Partida
+              </h5>
+              <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <p>¿Qué deseas hacer?</p>
+              <div class="d-flex flex-column gap-2">
+                <button
+                  type="button"
+                  class="btn btn-outline-warning text-start py-2"
+                  @click="confirmReset(false)"
+                >
+                  <strong>Limpiar libreta</strong>
+                  <div class="small text-secondary">
+                    Borra las marcas y diario, pero mantiene los nombres de los jugadores.
+                  </div>
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-outline-danger text-start py-2"
+                  @click="confirmReset(true)"
+                >
+                  <strong>Nueva partida desde cero</strong>
+                  <div class="small text-secondary">
+                    Restablece los jugadores por defecto y borra todo el historial.
+                  </div>
+                </button>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </body>
-  <script
-    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
-    crossorigin="anonymous"
-  ></script>
-  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 
-  <script src="./app.js"></script>
-  <!-- <script>
-    window.onload = () => {
-      const myModal = new bootstrap.Modal('#selectPlayers');
-      myModal.show();
-    };
-  </script> -->
+    <!-- Bootstrap 5 Bundle JS -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+      crossorigin="anonymous"
+    ></script>
+    <!-- Vue 3 Global CDN -->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <!-- App Logic -->
+    <script src="./app.js"></script>
+  </body>
 </html>
