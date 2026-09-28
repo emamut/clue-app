@@ -487,6 +487,33 @@ body {
   box-shadow: 0 4px 20px rgba(234, 179, 8, 0.4);
 }
 
+.deduction-alert-banner {
+  background: linear-gradient(90deg, #1e1b4b, #312e81, #1e293b);
+  border: 1px solid #6366f1;
+  color: #e0e7ff;
+  border-radius: 10px;
+  padding: 0.6rem 1rem;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  animation: slide-in 0.3s ease;
+  box-shadow: 0 4px 15px rgba(99, 102, 241, 0.25);
+}
+
+.turn-tracker-badge {
+  background: rgba(234, 179, 8, 0.15);
+  border: 1px solid var(--accent-gold);
+  color: var(--accent-gold);
+  border-radius: 20px;
+  padding: 0.25rem 0.75rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
 @keyframes slide-in {
   from { opacity: 0; transform: translateY(-10px); }
   to { opacity: 1; transform: translateY(0); }
@@ -509,3 +536,42 @@ body {
     font-size: 0.95rem;
   }
 }
+
+/* Print Stylesheet for physical board game paper play */
+@media print {
+  body {
+    background: #fff !important;
+    color: #000 !important;
+  }
+  .app-header,
+  .nav-pills-custom,
+  .input-group,
+  .btn,
+  .legend-pill,
+  .case-solved-banner button,
+  .modal {
+    display: none !important;
+  }
+  .table-responsive-wrapper {
+    box-shadow: none !important;
+    border: 1px solid #000 !important;
+  }
+  .clue-table th, .clue-table td {
+    color: #000 !important;
+    border: 1px solid #ccc !important;
+    background: transparent !important;
+  }
+  .clue-table thead th {
+    background: #f0f0f0 !important;
+  }
+  .category-header-row td {
+    background: #e2e8f0 !important;
+    font-weight: bold;
+  }
+  .cell-btn {
+    border: 1px solid #888 !important;
+    color: #000 !important;
+    background: transparent !important;
+  }
+}
+

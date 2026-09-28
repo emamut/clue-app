@@ -4,6 +4,15 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Clue Detective - Libreta de Juego</title>
+    <!-- Favicon SVG -->
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='48' fill='%23131b2e' stroke='%23eab308' stroke-width='4'/><path d='M45 28a18 18 0 1 0 12.8 30.6l14.6 14.6 4-4-14.6-14.6A18 18 0 0 0 45 28zm0 6a12 12 0 1 1 0 24 12 12 0 0 1 0-24z' fill='%23eab308'/></svg>"
+      type="image/svg+xml"
+    />
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="./manifest.json" />
+    <meta name="theme-color" content="#131b2e" />
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -31,12 +40,27 @@
       <!-- Top Sticky App Bar -->
       <header class="app-header py-2 px-3 mb-3">
         <div class="container-fluid d-flex flex-wrap align-items-center justify-content-between gap-2">
-          <!-- Brand -->
-          <div class="d-flex align-items-center gap-2">
-            <i class="bi bi-incognito text-warning fs-3"></i>
-            <div>
-              <h1 class="brand-title h4 m-0">CLUE</h1>
-              <span class="badge badge-detective py-0 px-2">Libreta de Detective</span>
+          <!-- Brand & Turn Indicator -->
+          <div class="d-flex align-items-center gap-3">
+            <div class="d-flex align-items-center gap-2">
+              <i class="bi bi-incognito text-warning fs-3"></i>
+              <div>
+                <h1 class="brand-title h4 m-0">CLUE</h1>
+                <span class="badge badge-detective py-0 px-2">Libreta de Detective</span>
+              </div>
+            </div>
+
+            <!-- Turn Tracker Indicator -->
+            <div v-if="currentTurnPlayer" class="turn-tracker-badge d-none d-md-inline-flex" title="Turno del jugador para preguntar (Presiona T)">
+              <i class="bi bi-clock-history"></i>
+              <span>Turno: <strong>{{ currentTurnPlayer.name }}</strong></span>
+              <button
+                class="btn btn-sm p-0 ms-1 text-warning border-0 bg-transparent"
+                @click="nextTurn"
+                title="Avanzar al siguiente turno (T)"
+              >
+                <i class="bi bi-arrow-right-circle-fill"></i>
+              </button>
             </div>
           </div>
 
@@ -57,7 +81,7 @@
             <button
               class="btn btn-sm btn-outline-warning d-flex align-items-center gap-1"
               @click="openHandModal"
-              title="Anotar cartas iniciales de tu mano"
+              title="Anotar cartas iniciales de tu mano (H)"
             >
               <i class="bi bi-suit-spade-fill"></i>
               <span class="d-none d-sm-inline">Mi Mano</span>
@@ -67,7 +91,7 @@
             <button
               class="btn btn-sm btn-outline-info d-flex align-items-center gap-1"
               @click="openSuggestionModal"
-              title="Registrar sospecha o pregunta de turno"
+              title="Registrar sospecha o pregunta de turno (Q)"
             >
               <i class="bi bi-chat-left-quote-fill"></i>
               <span class="d-none d-sm-inline">Pregunta</span>
@@ -87,14 +111,50 @@
               <span class="d-none d-md-inline">Jugadores ({{ players.length }})</span>
             </button>
 
-            <!-- Export / Copy Summary -->
+            <!-- Export / Share -->
             <button
               class="btn btn-sm btn-outline-light d-flex align-items-center gap-1"
               @click="exportSummary"
               title="Copiar resumen del caso al portapapeles"
             >
               <i class="bi bi-clipboard-check"></i>
-              <span class="d-none d-md-inline">Compartir</span>
+              <span class="d-none d-lg-inline">Compartir</span>
+            </button>
+
+            <!-- Print Sheet -->
+            <button
+              class="btn btn-sm btn-outline-light d-none d-lg-inline-flex align-items-center gap-1"
+              @click="printSheet"
+              title="Imprimir libreta en papel"
+            >
+              <i class="bi bi-printer"></i>
+            </button>
+
+            <!-- Sound FX Toggle -->
+            <button
+              class="btn btn-sm btn-outline-light"
+              @click="toggleSound"
+              :title="soundEnabled ? 'Silenciar efectos de sonido (S)' : 'Activar efectos de sonido (S)'"
+            >
+              <i :class="soundEnabled ? 'bi bi-volume-up-fill text-warning' : 'bi bi-volume-mute-fill text-secondary'"></i>
+            </button>
+
+            <!-- Theme Toggle -->
+            <button
+              class="btn btn-sm btn-outline-light"
+              @click="toggleTheme"
+              :title="theme === 'dark' ? 'Cambiar a modo claro' : 'Cambiar a modo detective oscuro'"
+            >
+              <i :class="theme === 'dark' ? 'bi bi-sun-fill text-warning' : 'bi bi-moon-stars-fill'"></i>
+            </button>
+
+            <!-- Shortcuts Help -->
+            <button
+              class="btn btn-sm btn-outline-secondary text-light"
+              @click="openShortcutsModal"
+              title="Atajos de teclado (?)"
+            >
+              <i class="bi bi-keyboard"></i>
             </button>
 
             <!-- Reset Game -->
@@ -105,16 +165,6 @@
               title="Nueva partida / Reiniciar"
             >
               <i class="bi bi-arrow-repeat"></i>
-              <span class="d-none d-md-inline">Reiniciar</span>
-            </button>
-
-            <!-- Theme Toggle -->
-            <button
-              class="btn btn-sm btn-outline-light"
-              @click="toggleTheme"
-              :title="theme === 'dark' ? 'Cambiar a modo claro' : 'Cambiar a modo detective oscuro'"
-            >
-              <i :class="theme === 'dark' ? 'bi bi-sun-fill text-warning' : 'bi bi-moon-stars-fill'"></i>
             </button>
           </div>
         </div>
@@ -130,6 +180,24 @@
         >
           <i class="bi bi-check-circle-fill"></i>
           <div>¡Resumen del caso copiado al portapapeles!</div>
+        </div>
+
+        <!-- Cross-Deduction Alerts -->
+        <div
+          v-for="(alertMsg, idx) in deductionAlerts"
+          :key="idx"
+          class="deduction-alert-banner"
+        >
+          <div class="d-flex align-items-center gap-2">
+            <i class="bi bi-lightning-charge-fill text-warning fs-5"></i>
+            <span>{{ alertMsg }}</span>
+          </div>
+          <button
+            class="btn btn-sm btn-link text-light p-0 text-decoration-none"
+            @click="dismissDeductionAlert(idx)"
+          >
+            <i class="bi bi-x-lg"></i>
+          </button>
         </div>
 
         <!-- Fully Solved Banner -->
@@ -497,7 +565,7 @@
               class="btn btn-sm btn-outline-secondary"
               @click="openSuggestionModal"
             >
-              <i class="bi bi-plus-lg"></i> Nueva Pregunta
+              <i class="bi bi-plus-lg"></i> Nueva Pregunta (Q)
             </button>
           </div>
 
@@ -889,7 +957,58 @@
         </div>
       </div>
 
-      <!-- 5. Reset Confirmation Modal -->
+      <!-- 5. Keyboard Shortcuts Modal -->
+      <div
+        class="modal fade"
+        id="shortcutsModal"
+        tabindex="-1"
+        aria-labelledby="shortcutsModalLabel"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="shortcutsModalLabel">
+                <i class="bi bi-keyboard me-2"></i> Atajos de Teclado
+              </h5>
+              <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <div class="list-group list-group-flush bg-transparent">
+                <div class="list-group-item bg-transparent text-light d-flex justify-content-between">
+                  <span>Deshacer último cambio</span>
+                  <kbd>Ctrl + Z</kbd>
+                </div>
+                <div class="list-group-item bg-transparent text-light d-flex justify-content-between">
+                  <span>Avanzar al siguiente turno</span>
+                  <kbd>T</kbd>
+                </div>
+                <div class="list-group-item bg-transparent text-light d-flex justify-content-between">
+                  <span>Registrar nueva pregunta</span>
+                  <kbd>Q</kbd>
+                </div>
+                <div class="list-group-item bg-transparent text-light d-flex justify-content-between">
+                  <span>Abrir "Mi Mano Inicial"</span>
+                  <kbd>H</kbd>
+                </div>
+                <div class="list-group-item bg-transparent text-light d-flex justify-content-between">
+                  <span>Activar / Silenciar sonidos</span>
+                  <kbd>S</kbd>
+                </div>
+                <div class="list-group-item bg-transparent text-light d-flex justify-content-between">
+                  <span>Ver esta ayuda</span>
+                  <kbd>?</kbd>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-warning w-100" data-bs-dismiss="modal">Entendido</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 6. Reset Confirmation Modal -->
       <div
         class="modal fade"
         id="resetModal"
