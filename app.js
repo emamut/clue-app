@@ -1,8 +1,9 @@
 // Clue Detective Companion App - Vue 3 Logic
 const { createApp, ref, computed, watch, onMounted } = Vue;
 
-const STORAGE_KEY = 'clue_app_save_v2';
+const STORAGE_KEY = 'clue_app_save_v3';
 const THEME_KEY = 'clue_app_theme';
+const SOUND_KEY = 'clue_app_sound';
 
 const CATEGORIES = [
   {
@@ -61,6 +62,58 @@ const DEFAULT_PLAYERS = [
   { id: 3, name: 'Jugador 4', isMe: false },
 ];
 
+// Web Audio API Synthesizer (Zero external dependencies)
+class SoundFX {
+  constructor() {
+    this.ctx = null;
+    this.enabled = true;
+  }
+  init() {
+    if (!this.ctx && typeof window !== 'undefined' && (window.AudioContext || window.webkitAudioContext)) {
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      this.ctx = new AudioCtx();
+    }
+    if (this.ctx && this.ctx.state === 'suspended') {
+      this.ctx.resume();
+    }
+  }
+  playTone(freq, type = 'sine', duration = 0.06, vol = 0.05) {
+    if (!this.enabled) return;
+    try {
+      this.init();
+      if (!this.ctx) return;
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      osc.type = type;
+      osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
+      gain.gain.setValueAtTime(vol, this.ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + duration);
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+      osc.start();
+      osc.stop(this.ctx.currentTime + duration);
+    } catch (e) {
+      // Audio not permitted or suspended
+    }
+  }
+  playCell(state) {
+    if (!this.enabled) return;
+    if (state === 'no') this.playTone(260, 'triangle', 0.08, 0.06);
+    else if (state === 'yes') this.playTone(520, 'sine', 0.12, 0.08);
+    else if (state === 'maybe') this.playTone(390, 'sine', 0.08, 0.05);
+    else this.playTone(200, 'sine', 0.04, 0.03);
+  }
+  playVictory() {
+    if (!this.enabled) return;
+    const notes = [392, 523.25, 659.25, 783.99, 1046.5];
+    notes.forEach((freq, idx) => {
+      setTimeout(() => this.playTone(freq, 'triangle', 0.25, 0.08), idx * 120);
+    });
+  }
+}
+
+const sfx = new SoundFX();
+
 createApp({
   setup() {
     // Reactive State
@@ -70,11 +123,14 @@ createApp({
     const notes = ref({}); // { [itemId]: string }
     const suggestions = ref([]); // [{ id, timestamp, asker, target, suspect, weapon, room, showed, cardShown }]
     const history = ref([]); // Snapshot stack for undo
+    const currentTurnIndex = ref(0);
 
     const activeFilter = ref('all'); // 'all' | 'suspects' | 'weapons' | 'rooms' | 'unsolved'
     const searchQuery = ref('');
     const theme = ref(localStorage.getItem(THEME_KEY) || 'dark');
+    const soundEnabled = ref(localStorage.getItem(SOUND_KEY) !== 'false');
     const autoDeduce = ref(true);
+    const deductionAlerts = ref([]);
 
     // Form states for modals
     const newPlayerCount = ref(4);
@@ -93,15 +149,37 @@ createApp({
     });
     const copyNotification = ref(false);
 
+    sfx.enabled = soundEnabled.value;
+
+    const toggleSound = () => {
+      soundEnabled.value = !soundEnabled.value;
+      sfx.enabled = soundEnabled.value;
+      localStorage.setItem(SOUND_KEY, soundEnabled.value);
+      if (soundEnabled.value) sfx.playTone(440, 'sine', 0.1, 0.07);
+    };
+
+    // Current turn player
+    const currentTurnPlayer = computed(() => {
+      if (players.value.length === 0) return null;
+      const idx = currentTurnIndex.value % players.value.length;
+      return players.value[idx];
+    });
+
+    const nextTurn = () => {
+      currentTurnIndex.value = (currentTurnIndex.value + 1) % players.value.length;
+      sfx.playTone(350, 'sine', 0.05, 0.05);
+    };
+
     // Snapshot for Undo
     const pushHistory = () => {
       const snapshot = {
         matrix: JSON.parse(JSON.stringify(matrix.value)),
         envelope: JSON.parse(JSON.stringify(envelope.value)),
         notes: JSON.parse(JSON.stringify(notes.value)),
+        currentTurnIndex: currentTurnIndex.value,
       };
       history.value.push(snapshot);
-      if (history.value.length > 30) {
+      if (history.value.length > 35) {
         history.value.shift();
       }
     };
@@ -112,6 +190,10 @@ createApp({
       matrix.value = lastState.matrix;
       envelope.value = lastState.envelope;
       notes.value = lastState.notes || {};
+      if (typeof lastState.currentTurnIndex === 'number') {
+        currentTurnIndex.value = lastState.currentTurnIndex;
+      }
+      sfx.playTone(220, 'triangle', 0.08, 0.05);
       runAutoDeductions();
     };
 
@@ -136,6 +218,8 @@ createApp({
       envelope.value = newEnvelope;
       notes.value = newNotes;
       history.value = [];
+      currentTurnIndex.value = 0;
+      deductionAlerts.value = [];
     };
 
     // Load from LocalStorage
@@ -150,6 +234,7 @@ createApp({
             envelope.value = parsed.envelope || {};
             notes.value = parsed.notes || {};
             suggestions.value = parsed.suggestions || [];
+            currentTurnIndex.value = parsed.currentTurnIndex || 0;
             if (typeof parsed.autoDeduce === 'boolean') {
               autoDeduce.value = parsed.autoDeduce;
             }
@@ -170,19 +255,21 @@ createApp({
         envelope: envelope.value,
         notes: notes.value,
         suggestions: suggestions.value,
+        currentTurnIndex: currentTurnIndex.value,
         autoDeduce: autoDeduce.value,
       };
       localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
     };
 
     // Watchers for persistence
-    watch([players, matrix, envelope, notes, suggestions, autoDeduce], saveState, { deep: true });
+    watch([players, matrix, envelope, notes, suggestions, autoDeduce, currentTurnIndex], saveState, { deep: true });
 
     // Toggle Theme
     const toggleTheme = () => {
       theme.value = theme.value === 'dark' ? 'light' : 'dark';
       document.documentElement.setAttribute('data-theme', theme.value);
       localStorage.setItem(THEME_KEY, theme.value);
+      sfx.playTone(400, 'sine', 0.05, 0.04);
     };
 
     // Helper: Find item by ID
@@ -202,6 +289,49 @@ createApp({
       };
     };
 
+    // Cross-Deduction Engine: Checks past suggestions where someone showed a card
+    const runCrossDeduction = () => {
+      if (!autoDeduce.value || suggestions.value.length === 0) return;
+
+      suggestions.value.forEach((sug) => {
+        if (!sug.showed) return;
+        const targetId = sug.targetId;
+        const cardIds = [sug.suspect.id, sug.weapon.id, sug.room.id];
+
+        // Is target already known to have one of these cards?
+        const alreadyHasOne = cardIds.some((cId) => matrix.value[cId]?.[targetId] === 'yes');
+        if (alreadyHasOne) return;
+
+        // Check how many of the 3 cards are ruled out for this target
+        const ruledOutCards = cardIds.filter((cId) => {
+          // Explicitly marked 'no' for this target
+          if (matrix.value[cId]?.[targetId] === 'no') return true;
+          // Or another player confirmed owns it
+          const otherOwns = players.value.some((p) => p.id !== targetId && matrix.value[cId]?.[p.id] === 'yes');
+          if (otherOwns) return true;
+          // Or it is in the envelope
+          if (envelope.value[cId] === 'yes') return true;
+          return false;
+        });
+
+        // If exactly 2 are ruled out, target MUST hold the 3rd card!
+        if (ruledOutCards.length === 2) {
+          const deducedCardId = cardIds.find((cId) => !ruledOutCards.includes(cId));
+          if (deducedCardId && matrix.value[deducedCardId]?.[targetId] !== 'yes') {
+            matrix.value[deducedCardId][targetId] = 'yes';
+            envelope.value[deducedCardId] = 'no';
+            const card = getItem(deducedCardId);
+            const target = players.value.find((p) => p.id === targetId);
+            const alertMsg = `💡 Deducción cruzada: ¡${target ? target.name : 'Un jugador'} tiene ${card ? card.name : 'la carta'}! (Descartadas 2 cartas de su pregunta de las ${sug.timestamp})`;
+            if (!deductionAlerts.value.includes(alertMsg)) {
+              deductionAlerts.value.unshift(alertMsg);
+              if (deductionAlerts.value.length > 3) deductionAlerts.value.pop();
+            }
+          }
+        }
+      });
+    };
+
     // Run Auto Deductions
     const runAutoDeductions = () => {
       if (!autoDeduce.value) return;
@@ -215,13 +345,11 @@ createApp({
           players.value.forEach((p) => {
             if (itemMatrix[p.id] === 'yes') {
               hasOwner = true;
-              // Other players cannot have it
               players.value.forEach((otherP) => {
                 if (otherP.id !== p.id && itemMatrix[otherP.id] !== 'no') {
                   itemMatrix[otherP.id] = 'no';
                 }
               });
-              // Envelope cannot have it
               if (envelope.value[item.id] !== 'no') {
                 envelope.value[item.id] = 'no';
               }
@@ -243,7 +371,6 @@ createApp({
                 itemMatrix[p.id] = 'no';
               }
             });
-            // Other items in this category cannot be in envelope
             cat.items.forEach((otherItem) => {
               if (otherItem.id !== item.id && envelope.value[otherItem.id] !== 'no') {
                 envelope.value[otherItem.id] = 'no';
@@ -266,6 +393,9 @@ createApp({
           }
         }
       });
+
+      // Run advanced cross-deductions from turn suggestions
+      runCrossDeduction();
     };
 
     // Toggle Cell Value: empty -> no -> yes -> maybe -> empty
@@ -283,12 +413,16 @@ createApp({
 
       matrix.value[itemId][playerId] = next;
 
-      // If set to yes, envelope cannot have it
       if (next === 'yes') {
         envelope.value[itemId] = 'no';
       }
 
+      sfx.playCell(next);
       runAutoDeductions();
+
+      if (caseSolution.value.isFullySolved) {
+        sfx.playVictory();
+      }
     };
 
     // Toggle Envelope Status: empty -> no -> yes -> empty
@@ -301,7 +435,12 @@ createApp({
       else if (current === 'yes') next = '';
 
       envelope.value[itemId] = next;
+      sfx.playCell(next === 'yes' ? 'yes' : next);
       runAutoDeductions();
+
+      if (caseSolution.value.isFullySolved) {
+        sfx.playVictory();
+      }
     };
 
     // Count of cards marked 'yes' for a player
@@ -319,11 +458,9 @@ createApp({
     const caseSolution = computed(() => {
       const getSolvedItem = (catId) => {
         const cat = CATEGORIES.find((c) => c.id === catId);
-        // Direct envelope yes
         const confirmed = cat.items.find((item) => envelope.value[item.id] === 'yes');
         if (confirmed) return { solved: true, item: confirmed };
 
-        // Remaining candidates (neither confirmed NO in envelope nor owned by any player)
         const candidates = cat.items.filter((item) => {
           if (envelope.value[item.id] === 'no') return false;
           const isOwned = players.value.some((p) => matrix.value[item.id]?.[p.id] === 'yes');
@@ -360,14 +497,12 @@ createApp({
         }
 
         const items = cat.items.filter((item) => {
-          // Search query check
           if (q) {
             const matchesName = item.name.toLowerCase().includes(q);
             const matchesSub = item.subtitle ? item.subtitle.toLowerCase().includes(q) : false;
             if (!matchesName && !matchesSub) return false;
           }
 
-          // Unsolved filter check
           if (activeFilter.value === 'unsolved') {
             const isEnvelopeSolved = envelope.value[item.id] === 'yes' || envelope.value[item.id] === 'no';
             const isHeldBySomeone = players.value.some((p) => matrix.value[item.id]?.[p.id] === 'yes');
@@ -386,6 +521,7 @@ createApp({
       players.value.forEach((p) => {
         p.isMe = p.id === playerId;
       });
+      sfx.playTone(480, 'sine', 0.08, 0.06);
     };
 
     // Open Player Settings Modal
@@ -418,12 +554,10 @@ createApp({
         }
       }
 
-      // Ensure at least one is 'me'
       if (!updatedList.some((p) => p.isMe)) {
         updatedList[0].isMe = true;
       }
 
-      // Re-initialize matrix columns for new players
       ALL_ITEMS.forEach((item) => {
         if (!matrix.value[item.id]) matrix.value[item.id] = {};
         updatedList.forEach((p) => {
@@ -434,15 +568,14 @@ createApp({
       });
 
       players.value = updatedList;
+      currentTurnIndex.value = currentTurnIndex.value % updatedList.length;
       runAutoDeductions();
     };
 
-    // Starting hand count selected
     const selectedHandCount = computed(() => {
       return Object.values(handSelection.value).filter(Boolean).length;
     });
 
-    // Open Starting Hand Modal
     const openHandModal = () => {
       const myPlayer = players.value.find((p) => p.isMe) || players.value[0];
       const selection = {};
@@ -457,7 +590,6 @@ createApp({
       }
     };
 
-    // Apply Starting Hand
     const applyStartingHand = () => {
       pushHistory();
       const myPlayer = players.value.find((p) => p.isMe) || players.value[0];
@@ -465,21 +597,19 @@ createApp({
       ALL_ITEMS.forEach((item) => {
         const isSelected = !!handSelection.value[item.id];
         if (isSelected) {
-          // I have this card!
           matrix.value[item.id][myPlayer.id] = 'yes';
           envelope.value[item.id] = 'no';
-          // Other players don't have it
           players.value.forEach((p) => {
             if (p.id !== myPlayer.id) {
               matrix.value[item.id][p.id] = 'no';
             }
           });
         } else if (matrix.value[item.id][myPlayer.id] === 'yes') {
-          // Unselected a card I previously held
           matrix.value[item.id][myPlayer.id] = '';
         }
       });
 
+      sfx.playTone(520, 'triangle', 0.15, 0.08);
       runAutoDeductions();
       const modalEl = document.getElementById('handModal');
       if (modalEl && window.bootstrap) {
@@ -488,7 +618,6 @@ createApp({
       }
     };
 
-    // Note Modal
     const openNoteModal = (item) => {
       activeNoteItemId.value = item.id;
       noteText.value = notes.value[item.id] || '';
@@ -502,6 +631,7 @@ createApp({
       if (activeNoteItemId.value) {
         pushHistory();
         notes.value[activeNoteItemId.value] = noteText.value.trim();
+        sfx.playTone(320, 'sine', 0.05, 0.04);
       }
       const modalEl = document.getElementById('noteModal');
       if (modalEl && window.bootstrap) {
@@ -510,15 +640,19 @@ createApp({
       }
     };
 
-    // Open Suggestion / Question Log Modal
     const openSuggestionModal = () => {
+      if (players.value.length > 0) {
+        const askerIdx = currentTurnIndex.value % players.value.length;
+        const targetIdx = (currentTurnIndex.value + 1) % players.value.length;
+        suggestionForm.value.askerId = players.value[askerIdx].id;
+        suggestionForm.value.targetId = players.value[targetIdx].id;
+      }
       const modalEl = document.getElementById('suggestionModal');
       if (modalEl && window.bootstrap) {
         new bootstrap.Modal(modalEl).show();
       }
     };
 
-    // Save Suggestion Entry
     const saveSuggestion = () => {
       pushHistory();
       const form = suggestionForm.value;
@@ -541,25 +675,23 @@ createApp({
 
       suggestions.value.unshift(entry);
 
-      // Auto actions
       if (form.showed === 'no' && form.autoMarkNo) {
-        // Target doesn't have any of the 3 cards!
         [form.suspectId, form.weaponId, form.roomId].forEach((itemId) => {
           if (matrix.value[itemId]) {
             matrix.value[itemId][form.targetId] = 'no';
           }
         });
       } else if (form.showed === 'yes' && form.cardShownId) {
-        // Target confirmed showed this specific card!
         if (matrix.value[form.cardShownId]) {
           matrix.value[form.cardShownId][form.targetId] = 'yes';
           envelope.value[form.cardShownId] = 'no';
         }
       }
 
+      sfx.playTone(440, 'triangle', 0.1, 0.06);
+      nextTurn();
       runAutoDeductions();
 
-      // Close modal
       const modalEl = document.getElementById('suggestionModal');
       if (modalEl && window.bootstrap) {
         const modal = bootstrap.Modal.getInstance(modalEl);
@@ -567,22 +699,24 @@ createApp({
       }
     };
 
-    // Remove Suggestion
     const removeSuggestion = (id) => {
       suggestions.value = suggestions.value.filter((s) => s.id !== id);
     };
 
-    // Reset Game
+    const dismissDeductionAlert = (idx) => {
+      deductionAlerts.value.splice(idx, 1);
+    };
+
     const confirmReset = (fullReset = false) => {
       if (fullReset) {
         players.value = JSON.parse(JSON.stringify(DEFAULT_PLAYERS));
         suggestions.value = [];
         initMatrix();
       } else {
-        // Keep players and names, clear markings and suggestions
         initMatrix(players.value);
         suggestions.value = [];
       }
+      sfx.playTone(200, 'sawtooth', 0.15, 0.05);
       runAutoDeductions();
 
       const modalEl = document.getElementById('resetModal');
@@ -592,7 +726,6 @@ createApp({
       }
     };
 
-    // Export Case Summary to Clipboard
     const exportSummary = () => {
       const sol = caseSolution.value;
       const suspectText = sol.suspect.solved ? sol.suspect.item.name : `${sol.suspect.candidatesCount} opciones restantes`;
@@ -613,10 +746,22 @@ createApp({
       if (navigator.clipboard) {
         navigator.clipboard.writeText(text).then(() => {
           copyNotification.value = true;
+          sfx.playTone(600, 'sine', 0.08, 0.05);
           setTimeout(() => {
             copyNotification.value = false;
           }, 2500);
         });
+      }
+    };
+
+    const printSheet = () => {
+      window.print();
+    };
+
+    const openShortcutsModal = () => {
+      const modalEl = document.getElementById('shortcutsModal');
+      if (modalEl && window.bootstrap) {
+        new bootstrap.Modal(modalEl).show();
       }
     };
 
@@ -625,13 +770,43 @@ createApp({
       loadState();
       runAutoDeductions();
 
-      // Keyboard shortcut for Undo (Ctrl+Z or Cmd+Z)
+      // Register Service Worker for PWA
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('./sw.js').catch((err) => {
+          console.warn('SW registration failed:', err);
+        });
+      }
+
+      // Keyboard shortcuts
       window.addEventListener('keydown', (e) => {
+        if (['INPUT', 'TEXTAREA'].includes(e.target.tagName)) return;
+
+        // Undo: Ctrl+Z / Cmd+Z
         if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z') {
-          if (canUndo.value && !['INPUT', 'TEXTAREA'].includes(e.target.tagName)) {
+          if (canUndo.value) {
             e.preventDefault();
             undo();
           }
+        }
+        // Turn: T
+        else if (e.key.toLowerCase() === 't') {
+          nextTurn();
+        }
+        // New question: Q
+        else if (e.key.toLowerCase() === 'q') {
+          openSuggestionModal();
+        }
+        // My hand: H
+        else if (e.key.toLowerCase() === 'h') {
+          openHandModal();
+        }
+        // Sound toggle: S
+        else if (e.key.toLowerCase() === 's') {
+          toggleSound();
+        }
+        // Help / Shortcuts: ?
+        else if (e.key === '?') {
+          openShortcutsModal();
         }
       });
     });
@@ -646,10 +821,14 @@ createApp({
       suggestions,
       history,
       canUndo,
+      currentTurnIndex,
+      currentTurnPlayer,
       activeFilter,
       searchQuery,
       theme,
+      soundEnabled,
       autoDeduce,
+      deductionAlerts,
       newPlayerCount,
       handSelection,
       selectedHandCount,
@@ -665,6 +844,8 @@ createApp({
       toggleEnvelope,
       getPlayerCardCount,
       toggleTheme,
+      toggleSound,
+      nextTurn,
       setMe,
       undo,
       openPlayerModal,
@@ -676,8 +857,11 @@ createApp({
       openSuggestionModal,
       saveSuggestion,
       removeSuggestion,
+      dismissDeductionAlert,
       confirmReset,
       exportSummary,
+      printSheet,
+      openShortcutsModal,
     };
   },
 }).mount('#app');

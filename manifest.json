@@ -1,0 +1,17 @@
+{
+  "name": "Clue Detective - Libreta y Asistente",
+  "short_name": "Clue App",
+  "description": "Libreta digital interactiva y motor de deducción para el juego de mesa Clue / Cluedo",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#0b0f19",
+  "theme_color": "#131b2e",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='48' fill='%23131b2e' stroke='%23eab308' stroke-width='4'/><path d='M45 28a18 18 0 1 0 12.8 30.6l14.6 14.6 4-4-14.6-14.6A18 18 0 0 0 45 28zm0 6a12 12 0 1 1 0 24 12 12 0 0 1 0-24z' fill='%23eab308'/></svg>",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml"
+    }
+  ]
+}
